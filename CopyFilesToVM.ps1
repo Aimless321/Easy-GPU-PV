@@ -1,21 +1,21 @@
 ﻿$params = @{
-    VMName = "GPUPV"
-    SourcePath = "C:\Users\james\Downloads\Win11_English_x64.iso"
+    VMName = "Bot6"
+    SourcePath = "C:\Users\Wesley\Downloads\tiny-10_202301\tiny10 x64 beta 2_new.iso"
     Edition    = 6
     VhdFormat  = "VHDX"
     DiskLayout = "UEFI"
-    SizeBytes  = 40GB
-    MemoryAmount = 8GB
-    CPUCores = 4
+    SizeBytes  = 56GB
+    MemoryAmount = 4000MB
+    CPUCores = 2
     NetworkSwitch = "Default Switch"
-    VHDPath = "C:\Users\Public\Documents\Hyper-V\Virtual Hard Disks\"
+    VHDPath = "D:\VMDisks"
     UnattendPath = "$PSScriptRoot"+"\autounattend.xml"
     GPUName = "AUTO"
-    GPUResourceAllocationPercentage = 50
+    GPUResourceAllocationPercentage = 10
     Team_ID = ""
     Key = ""
     Username = "GPUVM"
-    Password = "CoolestPassword!"
+    Password = "simplepassword"
     Autologon = "true"
 }
 
@@ -176,6 +176,7 @@ param(
     Copy-Item -Path $psscriptroot\gpt.ini -Destination $DriveLetter\Windows\system32\GroupPolicy
     Copy-Item -Path $psscriptroot\User\psscripts.ini -Destination $DriveLetter\Windows\system32\GroupPolicy\User\Scripts
     Copy-Item -Path $psscriptroot\User\Install.ps1 -Destination $DriveLetter\Windows\system32\GroupPolicy\User\Scripts\Logon
+    Copy-Item -Path $psscriptroot\User\Handler.ps1 -Destination $DriveLetter\Windows\system32\GroupPolicy\User\Scripts\Logon
     Copy-Item -Path $psscriptroot\Machine\psscripts.ini -Destination $DriveLetter\Windows\system32\GroupPolicy\Machine\Scripts
     Copy-Item -Path $psscriptroot\Machine\Install.ps1 -Destination $DriveLetter\Windows\system32\GroupPolicy\Machine\Scripts\Startup
 }
