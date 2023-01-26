@@ -26,6 +26,8 @@ if (Test-Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninst
 
       (New-Object System.Net.WebClient).DownloadFile("https://cdn.akamai.steamstatic.com/client/installer/SteamSetup.exe", "C:\Users\$env:USERNAME\Downloads\SteamSetup.exe")
       Start-Process "C:\Users\$env:USERNAME\Downloads\SteamSetup.exe" -ArgumentList "/S" -wait
+
+      Start-Process "C:\ProgramData\Easy-GPU-P\Optimizer-14.8.exe" -ArgumentList "/C:\ProgramData\Easy-GPU-P\win11.conf" -wait
     }
 
 Function BotScheduledTask {
