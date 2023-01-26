@@ -28,6 +28,66 @@ if (Test-Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninst
       Start-Process "C:\Users\$env:USERNAME\Downloads\SteamSetup.exe" -ArgumentList "/S" -wait
     }
 
+Function BotScheduledTask {
+$XML = @"
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>Runs the Seeding handler on startup</Description>
+    <URI>\Seeding Handler</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <LogonTrigger>
+      <Enabled>true</Enabled>
+      <UserId>$(([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name)</UserId>
+      <Delay>PT2M</Delay>
+    </LogonTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>$(([System.Security.Principal.WindowsIdentity]::GetCurrent()).User.Value)</UserId>
+      <LogonType>S4U</LogonType>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>true</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>false</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT72H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe</Command>
+      <Arguments>-command "%programdata%\Easy-GPU-P\Handler.ps1"</Arguments>
+    </Exec>
+  </Actions>
+</Task>
+"@
+
+    try {
+        Get-ScheduledTask -TaskName "Seeding Handler" -ErrorAction Stop | Out-Null
+        Unregister-ScheduledTask -TaskName "Seeding Handler" -Confirm:$false
+        }
+    catch {}
+    $action = New-ScheduledTaskAction -Execute 'C:\WINDOWS\system32\WindowsPowerShell\v1.0\powershell.exe' -Argument '-command "%programdata%\Easy-GPU-P\Handler.ps1"'
+    $trigger =  New-ScheduledTaskTrigger -AtStartup
+    Register-ScheduledTask -XML $XML -TaskName "Seeding Handler" | Out-Null
+    }
+
 Function ParsecVDDMonitorSetupScheduledTask {
 $XML = @"
 <?xml version="1.0" encoding="UTF-16"?>
